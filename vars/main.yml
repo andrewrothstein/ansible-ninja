@@ -1,0 +1,7 @@
+---
+# vars file for ninja
+ninja_rzip: ninja-{{ ninja_os }}.zip
+ninja_lzip: ninja-{{ ninja_ver }}-{{ ninja_os }}.zip
+ninja_url: '{{ ninja_mirror }}/{{ ninja_ver }}/{{ ninja_rzip }}'
+ninja_checksum: '{{ ninja_checksums[ninja_ver][ninja_os] }}'
+ninja_install_ver_dir: '{{ ninja_parent_install_dir }}/ninja-{{ ninja_ver }}'

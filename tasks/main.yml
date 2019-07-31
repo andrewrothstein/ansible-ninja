@@ -1,0 +1,56 @@
+---
+- name: resolve platform specific vars
+  include_vars: '{{ item }}'
+  with_first_found:
+    - files:
+        - '{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
+        - '{{ ansible_distribution }}.yml'
+        - '{{ ansible_os_family }}.yml'
+      skip: true
+      paths:
+        - '{{ role_path }}/vars'
+- name: check for install
+  become: yes
+  stat:
+    path: '{{ ninja_install_ver_dir }}'
+  changed_when: false
+  register: ninja_binary
+- when: not ninja_binary.stat.exists
+  block:
+    - name: download
+      become: yes
+      become_user: root
+      get_url:
+        url: '{{ ninja_url }}'
+        dest: /tmp/{{ ninja_lzip }}
+        checksum: '{{ ninja_checksum }}'
+        mode: 0644
+    - name: mkdir
+      become: yes
+      become_user: root
+      file:
+        path: '{{ ninja_install_ver_dir }}'
+        state: directory
+        mode: 0755
+    - name: unarchive
+      become: yes
+      become_user: root
+      unarchive:
+        remote_src: yes
+        src: /tmp/{{ ninja_lzip }}
+        dest: '{{ ninja_install_ver_dir }}'
+        creates: '{{ ninja_install_ver_dir }}/ninja'
+  always:
+    - name: cleanup
+      become: yes
+      become_user: root
+      file:
+        path: /tmp/{{ ninja_lzip }}
+        state: absent
+- name: link
+  become: yes
+  become_user: root
+  file:
+    src: '{{ ninja_install_ver_dir }}/ninja'
+    dest: '{{ ninja_parent_install_dir }}/bin/ninja'
+    state: link

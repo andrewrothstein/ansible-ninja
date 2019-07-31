@@ -1,0 +1,14 @@
+---
+# defaults file for ninja
+ninja_ver: v1.9.0
+ninja_mirror: https://github.com/ninja-build/ninja/releases/download
+ninja_os: linux
+ninja_checksums:
+  v1.9.0:
+    # https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-linux.zip
+    linux: sha256:1b1235f2b0b4df55ac6d80bbe681ea3639c9d2c505c7ff2159a3daf63d196305
+    # https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-mac.zip
+    mac: sha256:26d32a79f786cca1004750f59e545199bf110e21e300d3c2424c1fddd78f28ab
+    # https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip
+    win: sha256:2d70010633ddaacc3af4ffbd21e22fae90d158674a09e132e06424ba3ab036e9
+ninja_parent_install_dir: /usr/local

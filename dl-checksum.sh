@@ -1,28 +1,29 @@
 #!/usr/bin/env sh
-VER=v1.9.0
 DIR=~/Downloads
 MIRROR=https://github.com/ninja-build/ninja/releases/download
 
 dl()
 {
-    OS=$1
-    RFILE=ninja-${OS}.zip
-    LFILE=ninja-${VER}-${OS}.zip
-    URL=$MIRROR/$VER/$RFILE
-    LFILE=$DIR/$LFILE
+    local ver=$1
+    local os=$2
+    local url=$MIRROR/$ver/ninja-${os}.zip
+    local lfile=$DIR/ninja-${ver}-${os}.zip
 
-    if [ ! -e $LFILE ];
+    if [ ! -e $lfile ];
     then
-        wget -q -O $LFILE $URL
+        wget -q -O $lfile $url
     fi
 
-    printf "    # %s\n" $URL
-    printf "    %s: sha256:%s\n" $OS `sha256sum $LFILE | awk '{print $1}'`
+    printf "    # %s\n" $url
+    printf "    %s: sha256:%s\n" $os $(sha256sum $lfile | awk '{print $1}')
 }
 
-printf "  %s:\n" $VER
-dl linux
-dl mac
-dl win
+dl_ver() {
+    local ver=$1
+    printf "  %s:\n" $ver
+    dl $ver linux
+    dl $ver mac
+    dl $ver win
+}
 
-
+dl_ver ${1:-v1.10.0}

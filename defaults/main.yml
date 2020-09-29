@@ -1,6 +1,6 @@
 ---
 # defaults file for ninja
-ninja_ver: v1.10.0
+ninja_ver: v1.10.1
 ninja_mirror: https://github.com/ninja-build/ninja/releases/download
 ninja_os: linux
 ninja_parent_install_dir: /usr/local
@@ -19,3 +19,10 @@ ninja_checksums:
     mac: sha256:2ee405c0e205d55666c60cc9c0d8d04c8ede06d3ef2e2c2aabe08fd81c17d22e
     # https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-win.zip
     win: sha256:919fd158c16bf135e8a850bb4046ec1ce28a7439ee08b977cd0b7f6b3463d178
+  v1.10.1:
+    # https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-linux.zip
+    linux: sha256:7ee7f467a1a747c5b5e02342904af9c24e84df4ca993541f1c4d0f113cab27aa
+    # https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-mac.zip
+    mac: sha256:0bd650190d4405c15894055e349d9b59d5690b0389551d757c5ed2d3841972d1
+    # https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-win.zip
+    win: sha256:5d1211ea003ec9760ad7f5d313ebf0b659d4ffafa221187d2b4444bc03714a33

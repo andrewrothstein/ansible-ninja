@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+set -e
 DIR=~/Downloads
 MIRROR=https://github.com/ninja-build/ninja/releases/download
 
@@ -26,4 +27,4 @@ dl_ver() {
     dl $ver win
 }
 
-dl_ver ${1:-v1.10.0}
+dl_ver ${1:-v1.10.1}

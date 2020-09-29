@@ -9,7 +9,13 @@
       skip: true
       paths:
         - '{{ role_path }}/vars'
-- name: check for install
+- name: install os dependent pkgs...
+  become: yes
+  become_user: root
+  package:
+    name: '{{ ninja_os_pkgs | default([]) }}'
+    state: present
+- name: checking for install at {{ ninja_install_ver_dir }}...
   become: yes
   stat:
     path: '{{ ninja_install_ver_dir }}'
@@ -17,40 +23,40 @@
   register: ninja_binary
 - when: not ninja_binary.stat.exists
   block:
-    - name: download
+    - name: downloading {{ ninja_url }} to {{ ninja_fq_lzip }}...
       become: yes
       become_user: root
       get_url:
         url: '{{ ninja_url }}'
-        dest: /tmp/{{ ninja_lzip }}
+        dest: '{{ ninja_fq_lzip }}'
         checksum: '{{ ninja_checksum }}'
         mode: 0644
-    - name: mkdir
+    - name: mkdir {{ ninja_install_ver_dir }}...
       become: yes
       become_user: root
       file:
         path: '{{ ninja_install_ver_dir }}'
         state: directory
         mode: 0755
-    - name: unarchive
+    - name: unarchive into {{ ninja_install_ver_dir }}...
       become: yes
       become_user: root
       unarchive:
         remote_src: yes
-        src: /tmp/{{ ninja_lzip }}
+        src: '{{ ninja_fq_lzip }}'
         dest: '{{ ninja_install_ver_dir }}'
-        creates: '{{ ninja_install_ver_dir }}/ninja'
+        creates: '{{ ninja_install_fq_exe }}'
   always:
-    - name: cleanup
+    - name: cleanup {{ ninja_fq_lzip }}...
       become: yes
       become_user: root
       file:
-        path: /tmp/{{ ninja_lzip }}
+        path: '{{ ninja_fq_lzip }}'
         state: absent
-- name: link
+- name: linking {{ ninja_install_fq_exe }} to {{ ninja_install_fq_link }}...
   become: yes
   become_user: root
   file:
-    src: '{{ ninja_install_ver_dir }}/ninja'
-    dest: '{{ ninja_parent_install_dir }}/bin/ninja'
+    src: '{{ ninja_install_fq_exe }}'
+    dest: '{{ ninja_install_fq_link }}'
     state: link

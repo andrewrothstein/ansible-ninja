@@ -12,7 +12,7 @@ dl()
 
     if [ ! -e $lfile ];
     then
-        wget -q -O $lfile $url
+        curl -sSLf -o $lfile $url
     fi
 
     printf "    # %s\n" $url
@@ -27,4 +27,4 @@ dl_ver() {
     dl $ver win
 }
 
-dl_ver ${1:-v1.10.1}
+dl_ver ${1:-v1.11.0}

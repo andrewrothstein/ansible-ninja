@@ -1,8 +1,9 @@
 ---
-- include_role:
+- name: Installing andrewrothstein.unarchivedeps
+  ansible.builtin.include_role:
     name: andrewrothstein.unarchivedeps
-- name: resolve platform specific vars
-  include_vars: '{{ item }}'
+- name: Resolve platform specific vars
+  ansible.builtin.include_vars: '{{ item }}'
   with_first_found:
     - files:
         - '{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
@@ -11,54 +12,55 @@
       skip: true
       paths:
         - '{{ role_path }}/vars'
-- name: install os dependent pkgs...
+- name: Install os dependent pkgs...
   become: true
   become_user: root
-  package:
+  ansible.builtin.package:
     name: '{{ ninja_os_pkgs | default([]) }}'
     state: present
-- name: checking for install at {{ ninja_install_ver_dir }}...
+- name: Checking for install at {{ ninja_install_ver_dir }}...
   become: true
-  stat:
+  ansible.builtin.stat:
     path: '{{ ninja_install_ver_dir }}'
   changed_when: false
   register: ninja_binary
-- when: not ninja_binary.stat.exists
+- name: Downloading and installing ninja
+  when: not ninja_binary.stat.exists
   block:
-    - name: downloading {{ ninja_url }} to {{ ninja_fq_lzip }}...
+    - name: Downloading {{ ninja_url }} to {{ ninja_fq_lzip }}...
       become: true
       become_user: root
-      get_url:
+      ansible.builtin.get_url:
         url: '{{ ninja_url }}'
         dest: '{{ ninja_fq_lzip }}'
         checksum: '{{ ninja_checksum }}'
-        mode: 0644
-    - name: mkdir {{ ninja_install_ver_dir }}...
+        mode: '644'
+    - name: Mkdir {{ ninja_install_ver_dir }}...
       become: true
       become_user: root
-      file:
+      ansible.builtin.file:
         path: '{{ ninja_install_ver_dir }}'
         state: directory
-        mode: 0755
-    - name: unarchive into {{ ninja_install_ver_dir }}...
+        mode: '755'
+    - name: Unarchive into {{ ninja_install_ver_dir }}...
       become: true
       become_user: root
-      unarchive:
+      ansible.builtin.unarchive:
         remote_src: true
         src: '{{ ninja_fq_lzip }}'
         dest: '{{ ninja_install_ver_dir }}'
         creates: '{{ ninja_install_fq_exe }}'
   always:
-    - name: cleanup {{ ninja_fq_lzip }}...
+    - name: Cleanup {{ ninja_fq_lzip }}...
       become: true
       become_user: root
-      file:
+      ansible.builtin.file:
         path: '{{ ninja_fq_lzip }}'
         state: absent
-- name: linking {{ ninja_install_fq_exe }} to {{ ninja_install_fq_link }}...
+- name: Linking {{ ninja_install_fq_exe }} to {{ ninja_install_fq_link }}...
   become: true
   become_user: root
-  file:
+  ansible.builtin.file:
     src: '{{ ninja_install_fq_exe }}'
     dest: '{{ ninja_install_fq_link }}'
     state: link
